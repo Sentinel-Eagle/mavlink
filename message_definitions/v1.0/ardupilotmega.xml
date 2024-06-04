@@ -1876,5 +1876,10 @@
       <field type="uint16_t[4]" name="rpm" units="rpm">RPM (eRPM).</field>
       <field type="uint16_t[4]" name="count">count of telemetry packets received (wraps at 65535).</field>
     </message>
+    <message id="12000" name="EAGLE_NORMALIZED_POINT">
+      <description>2D float point where (0.0, 0.0) and (1.0, 1.0) are the boundaries.</description>
+      <field type="float" name="x">x-coordinate.</field>
+      <field type="float" name="y">y-coordinate.</field>
+    </message>
   </messages>
 </mavlink>
