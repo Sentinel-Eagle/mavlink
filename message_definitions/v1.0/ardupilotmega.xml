@@ -1881,5 +1881,11 @@
       <field type="float" name="x">x-coordinate.</field>
       <field type="float" name="y">y-coordinate.</field>
     </message>
+    <message id="12001" name="EAGLE_ZOOM">
+      <description>Zoom in on point or zoom out. Format as in EAGLE_NORMALIZED_POINT</description>
+      <field type="float" name="x">x-coordinate.</field>
+      <field type="float" name="y">y-coordinate.</field>
+      <field type="uint16_t" name="mode">Enum 0=ZOOM_IN, 1=ZOOM_OUT.</field>
+    </message>
   </messages>
 </mavlink>
