@@ -1880,13 +1880,16 @@
       <description>2D float point where (0.0, 0.0) and (1.0, 1.0) are the boundaries.</description>
       <field type="float" name="x">x-coordinate.</field>
       <field type="float" name="y">y-coordinate.</field>
-      <field type="uint16_t" name="mode">Mode.</field>
     </message>
     <message id="12001" name="EAGLE_ZOOM">
       <description>Zoom in on point or zoom out. Format as in EAGLE_CLICK</description>
       <field type="float" name="x">x-coordinate.</field>
       <field type="float" name="y">y-coordinate.</field>
       <field type="uint16_t" name="mode">Enum 0=ZOOM_IN, 1=ZOOM_OUT.</field>
+    </message>
+    <message id="12002" name="EAGLE_MODE">
+      <description>Mode.</description>
+      <field type="uint16_t" name="mode">Mode.</field>
     </message>
   </messages>
 </mavlink>
