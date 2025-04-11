@@ -1891,5 +1891,9 @@
       <description>Mode.</description>
       <field type="uint16_t" name="mode">Mode.</field>
     </message>
+    <message id="12003" name="EAGLE_ADD_GPS_POINT">
+      <description>Add gps point.</description>
+      <field type="uint32_t" name="ignored">The library didn't want to compile without any fields in a message</field>
+    </message>
   </messages>
 </mavlink>
