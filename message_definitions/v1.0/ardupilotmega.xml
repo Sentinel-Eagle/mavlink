@@ -1887,13 +1887,9 @@
       <field type="float" name="y">y-coordinate.</field>
       <field type="uint16_t" name="mode">Enum 0=ZOOM_IN, 1=ZOOM_OUT.</field>
     </message>
-    <message id="12002" name="EAGLE_MODE">
-      <description>Mode.</description>
-      <field type="uint16_t" name="mode">Mode.</field>
-    </message>
-    <message id="12003" name="EAGLE_ADD_GPS_POINT">
-      <description>Add gps point.</description>
-      <field type="uint32_t" name="ignored">The library didn't want to compile without any fields in a message</field>
+    <message id="12002" name="EAGLE_KEYBOARD_KEY_PRESS">
+      <description>Keyboard key press.</description>
+      <field type="int32_t" name="ascii_code">ASCII code</field>
     </message>
   </messages>
 </mavlink>
