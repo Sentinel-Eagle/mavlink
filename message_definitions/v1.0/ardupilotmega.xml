@@ -1304,6 +1304,8 @@
       <field type="float" name="zgyro" units="rad/s">Angular speed around Z axis.</field>
       <field type="int32_t" name="lat" units="degE7">Latitude.</field>
       <field type="int32_t" name="lng" units="degE7">Longitude.</field>
+      <field type="float" name="alt" units="m">Altitude above mean sea level.</field>
+      <field type="float" name="relative_alt" units="m">Altitude above the simulated home position.</field>
     </message>
     <message id="165" name="HWSTATUS">
       <description>Status of key hardware.</description>
