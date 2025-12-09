@@ -1304,8 +1304,6 @@
       <field type="float" name="zgyro" units="rad/s">Angular speed around Z axis.</field>
       <field type="int32_t" name="lat" units="degE7">Latitude.</field>
       <field type="int32_t" name="lng" units="degE7">Longitude.</field>
-      <field type="float" name="alt" units="m">Altitude above mean sea level.</field>
-      <field type="float" name="relative_alt" units="m">Altitude above the simulated home position.</field>
     </message>
     <message id="165" name="HWSTATUS">
       <description>Status of key hardware.</description>
@@ -1892,6 +1890,22 @@
     <message id="12002" name="EAGLE_KEYBOARD_KEY_PRESS">
       <description>Keyboard key press.</description>
       <field type="int32_t" name="ascii_code">ASCII code</field>
+    </message>
+    <message id="12003" name="EAGLE_SIMSTATE">
+      <description>Status of simulation environment including Eagle-specific extensions.</description>
+      <field type="float" name="roll" units="rad">Roll angle.</field>
+      <field type="float" name="pitch" units="rad">Pitch angle.</field>
+      <field type="float" name="yaw" units="rad">Yaw angle.</field>
+      <field type="float" name="xacc" units="m/s/s">X acceleration.</field>
+      <field type="float" name="yacc" units="m/s/s">Y acceleration.</field>
+      <field type="float" name="zacc" units="m/s/s">Z acceleration.</field>
+      <field type="float" name="xgyro" units="rad/s">Angular speed around X axis.</field>
+      <field type="float" name="ygyro" units="rad/s">Angular speed around Y axis.</field>
+      <field type="float" name="zgyro" units="rad/s">Angular speed around Z axis.</field>
+      <field type="int32_t" name="lat" units="degE7">Latitude.</field>
+      <field type="int32_t" name="lng" units="degE7">Longitude.</field>
+      <field type="float" name="alt" units="m">Altitude above mean sea level.</field>
+      <field type="float" name="relative_alt" units="m">Altitude above the simulated home position.</field>
     </message>
   </messages>
 </mavlink>
