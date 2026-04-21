@@ -3310,6 +3310,9 @@
       <entry value="2048" name="CAMERA_CAP_FLAGS_HAS_TRACKING_GEO_STATUS">
         <description>Camera supports tracking geo status (CAMERA_TRACKING_GEO_STATUS).</description>
       </entry>
+      <entry value="4096" name="CAMERA_CAP_FLAGS_HAS_THERMAL_RANGE">
+        <description>Camera supports absolute thermal range (request CAMERA_THERMAL_RANGE with MAV_CMD_REQUEST_MESSAGE) (WIP).</description>
+      </entry>
     </enum>
     <enum name="VIDEO_STREAM_STATUS_FLAGS" bitmask="true">
       <description>Stream status flags (Bitmap)</description>
@@ -3318,6 +3321,9 @@
       </entry>
       <entry value="2" name="VIDEO_STREAM_STATUS_FLAGS_THERMAL">
         <description>Stream is thermal imaging</description>
+      </entry>
+      <entry value="4" name="VIDEO_STREAM_STATUS_FLAGS_THERMAL_RANGE_ENABLED">
+        <description>Stream can report absolute thermal range (see CAMERA_THERMAL_RANGE). (WIP).</description>
       </entry>
     </enum>
     <enum name="VIDEO_STREAM_TYPE">
@@ -3331,8 +3337,20 @@
       <entry value="2" name="VIDEO_STREAM_TYPE_TCP_MPEG">
         <description>Stream is MPEG on TCP</description>
       </entry>
-      <entry value="3" name="VIDEO_STREAM_TYPE_MPEG_TS_H264">
-        <description>Stream is h.264 on MPEG TS (URI gives the port number)</description>
+      <entry value="3" name="VIDEO_STREAM_TYPE_MPEG_TS">
+        <description>Stream is MPEG TS (URI gives the port number)</description>
+      </entry>
+    </enum>
+    <enum name="VIDEO_STREAM_ENCODING">
+      <description>Video stream encodings</description>
+      <entry value="0" name="VIDEO_STREAM_ENCODING_UNKNOWN">
+        <description>Stream encoding is unknown</description>
+      </entry>
+      <entry value="1" name="VIDEO_STREAM_ENCODING_H264">
+        <description>Stream encoding is H.264</description>
+      </entry>
+      <entry value="2" name="VIDEO_STREAM_ENCODING_H265">
+        <description>Stream encoding is H.265</description>
       </entry>
     </enum>
     <enum name="CAMERA_TRACKING_STATUS_FLAGS">
@@ -4437,7 +4455,7 @@
       <field type="int32_t" name="lat" units="degE7">Latitude, expressed</field>
       <field type="int32_t" name="lon" units="degE7">Longitude, expressed</field>
       <field type="int32_t" name="alt" units="mm">Altitude (MSL). Note that virtually all GPS modules provide both WGS84 and MSL.</field>
-      <field type="int32_t" name="relative_alt" units="mm">Altitude above ground</field>
+      <field type="int32_t" name="relative_alt" units="mm">Altitude above home</field>
       <field type="int16_t" name="vx" units="cm/s">Ground X Speed (Latitude, positive north)</field>
       <field type="int16_t" name="vy" units="cm/s">Ground Y Speed (Longitude, positive east)</field>
       <field type="int16_t" name="vz" units="cm/s">Ground Z Speed (Altitude, positive down)</field>
@@ -6037,6 +6055,8 @@
       <field type="uint16_t" name="hfov" units="deg">Horizontal Field of view.</field>
       <field type="char[32]" name="name">Stream name.</field>
       <field type="char[160]" name="uri">Video stream URI (TCP or RTSP URI ground station should connect to) or port number (UDP port ground station should listen to).</field>
+      <extensions/>
+      <field type="uint8_t" name="encoding" enum="VIDEO_STREAM_ENCODING">Encoding of stream.</field>
     </message>
     <message id="270" name="VIDEO_STREAM_STATUS">
       <description>Information about the status of a video stream. It may be requested using MAV_CMD_REQUEST_MESSAGE.</description>
@@ -6090,6 +6110,20 @@
       <field type="float" name="dist" units="m" invalid="NaN">Distance between camera and tracked object. NAN if unknown</field>
       <field type="float" name="hdg" units="rad" invalid="NaN">Heading in radians, in NED. NAN if unknown</field>
       <field type="float" name="hdg_acc" units="rad" invalid="NaN">Accuracy of heading, in NED. NAN if unknown</field>
+    </message>
+    <message id="277" name="CAMERA_THERMAL_RANGE">
+      <wip/>
+      <!-- This message is work-in-progress and it can therefore change. It should NOT be used in stable production environments. -->
+      <description>Camera absolute thermal range. This can be streamed when the associated `VIDEO_STREAM_STATUS.flag` bit `VIDEO_STREAM_STATUS_FLAGS_THERMAL_RANGE_ENABLED` is set, but a GCS may choose to only request it for the current active stream. Use MAV_CMD_SET_MESSAGE_INTERVAL to define message interval (param3 indicates the stream id of the current camera, or 0 for all streams, param4 indicates the target camera_device_id for autopilot-attached cameras or 0 for MAVLink cameras).</description>
+      <field type="uint32_t" name="time_boot_ms" units="ms">Timestamp (time since system boot).</field>
+      <field type="uint8_t" name="stream_id" minValue="1" instance="true">Video Stream ID (1 for first, 2 for second, etc.)</field>
+      <field type="uint8_t" name="camera_device_id" default="0" minValue="0" maxValue="6">Camera id of a non-MAVLink camera attached to an autopilot (1-6).  0 if the component is a MAVLink camera (with its own component id).</field>
+      <field type="float" name="max" units="degC">Temperature max.</field>
+      <field type="float" name="max_point_x" invalid="NaN">Temperature max point x value (normalized 0..1, 0 is left, 1 is right), NAN if unknown.</field>
+      <field type="float" name="max_point_y" invalid="NaN">Temperature max point y value (normalized 0..1, 0 is top, 1 is bottom), NAN if unknown.</field>
+      <field type="float" name="min" units="degC">Temperature min.</field>
+      <field type="float" name="min_point_x" invalid="NaN">Temperature min point x value (normalized 0..1, 0 is left, 1 is right), NAN if unknown.</field>
+      <field type="float" name="min_point_y" invalid="NaN">Temperature min point y value (normalized 0..1, 0 is top, 1 is bottom), NAN if unknown.</field>
     </message>
     <message id="280" name="GIMBAL_MANAGER_INFORMATION">
       <description>Information about a high level gimbal manager. This message should be requested by a ground station using MAV_CMD_REQUEST_MESSAGE.</description>
@@ -6351,6 +6385,33 @@
       <field type="uint8_t" name="reset_counter">Estimate reset counter. This should be incremented when the estimate resets in any of the dimensions (position, velocity, attitude, angular speed). This is designed to be used when e.g an external SLAM system detects a loop-closure and the estimate jumps.</field>
       <field type="uint8_t" name="estimator_type" enum="MAV_ESTIMATOR_TYPE">Type of estimator that is providing the odometry.</field>
       <field type="int8_t" name="quality" units="%" invalid="0">Optional odometry quality metric as a percentage. -1 = odometry has failed, 0 = unknown/unset quality, 1 = worst quality, 100 = best quality</field>
+    </message>
+    <message id="332" name="TRAJECTORY_REPRESENTATION_WAYPOINTS">
+      <description>Describe a trajectory using an array of up-to 5 waypoints in the local frame (MAV_FRAME_LOCAL_NED).</description>
+      <field type="uint64_t" name="time_usec" units="us">Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.</field>
+      <field type="uint8_t" name="valid_points">Number of valid points (up-to 5 waypoints are possible)</field>
+      <field type="float[5]" name="pos_x" units="m" invalid="[NaN]">X-coordinate of waypoint, set to NaN if not being used</field>
+      <field type="float[5]" name="pos_y" units="m" invalid="[NaN]">Y-coordinate of waypoint, set to NaN if not being used</field>
+      <field type="float[5]" name="pos_z" units="m" invalid="[NaN]">Z-coordinate of waypoint, set to NaN if not being used</field>
+      <field type="float[5]" name="vel_x" units="m/s" invalid="[NaN]">X-velocity of waypoint, set to NaN if not being used</field>
+      <field type="float[5]" name="vel_y" units="m/s" invalid="[NaN]">Y-velocity of waypoint, set to NaN if not being used</field>
+      <field type="float[5]" name="vel_z" units="m/s" invalid="[NaN]">Z-velocity of waypoint, set to NaN if not being used</field>
+      <field type="float[5]" name="acc_x" units="m/s/s" invalid="[NaN]">X-acceleration of waypoint, set to NaN if not being used</field>
+      <field type="float[5]" name="acc_y" units="m/s/s" invalid="[NaN]">Y-acceleration of waypoint, set to NaN if not being used</field>
+      <field type="float[5]" name="acc_z" units="m/s/s" invalid="[NaN]">Z-acceleration of waypoint, set to NaN if not being used</field>
+      <field type="float[5]" name="pos_yaw" units="rad" invalid="[NaN]">Yaw angle, set to NaN if not being used</field>
+      <field type="float[5]" name="vel_yaw" units="rad/s" invalid="[NaN]">Yaw rate, set to NaN if not being used</field>
+      <field type="uint16_t[5]" name="command" enum="MAV_CMD" invalid="[UINT16_MAX]">MAV_CMD command id of waypoint, set to UINT16_MAX if not being used.</field>
+    </message>
+    <message id="333" name="TRAJECTORY_REPRESENTATION_BEZIER">
+      <description>Describe a trajectory using an array of up-to 5 bezier control points in the local frame (MAV_FRAME_LOCAL_NED).</description>
+      <field type="uint64_t" name="time_usec" units="us">Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.</field>
+      <field type="uint8_t" name="valid_points">Number of valid control points (up-to 5 points are possible)</field>
+      <field type="float[5]" name="pos_x" units="m" invalid="[NaN]">X-coordinate of bezier control points. Set to NaN if not being used</field>
+      <field type="float[5]" name="pos_y" units="m" invalid="[NaN]">Y-coordinate of bezier control points. Set to NaN if not being used</field>
+      <field type="float[5]" name="pos_z" units="m" invalid="[NaN]">Z-coordinate of bezier control points. Set to NaN if not being used</field>
+      <field type="float[5]" name="delta" units="s" invalid="[NaN]">Bezier time horizon. Set to NaN if velocity/acceleration should not be incorporated</field>
+      <field type="float[5]" name="pos_yaw" units="rad" invalid="[NaN]">Yaw. Set to NaN for unchanged</field>
     </message>
     <message id="335" name="ISBD_LINK_STATUS">
       <description>Status of the Iridium SBD link.</description>
