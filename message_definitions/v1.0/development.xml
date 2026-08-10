@@ -5,15 +5,6 @@
   <version>0</version>
   <dialect>0</dialect>
   <enums>
-    <enum name="AIRSPEED_SENSOR_FLAGS" bitmask="true">
-      <description>Airspeed sensor flags</description>
-      <entry value="1" name="AIRSPEED_SENSOR_UNHEALTHY">
-        <description>Airspeed sensor is unhealthy</description>
-      </entry>
-      <entry value="2" name="AIRSPEED_SENSOR_USING">
-        <description>True if the data from this sensor is being actively used by the flight controller for guidance, navigation or control.</description>
-      </entry>
-    </enum>
     <enum name="RADIO_RC_CHANNELS_FLAGS" bitmask="true">
       <description>RADIO_RC_CHANNELS flags (bitmask).</description>
       <entry value="1" name="RADIO_RC_CHANNELS_FLAGS_FAILSAFE">
