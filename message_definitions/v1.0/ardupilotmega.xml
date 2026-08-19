@@ -2122,6 +2122,25 @@
       <field type="float" name="alt" units="m">Altitude above mean sea level.</field>
       <field type="float" name="relative_alt" units="m">Altitude above the simulated home position.</field>
     </message>
+    <message id="12004" name="EAGLE_RESET_POSITION">
+      <description>Clicked on map.</description>
+      <field type="int32_t" name="lat" units="degE7">Latitude.</field>
+      <field type="int32_t" name="lng" units="degE7">Longitude.</field>
+    </message>
+    <message id="12005" name="EAGLE_LANES">
+      <description>Per-lane status for all cores.</description>
+      <field type="uint8_t" name="active_lane">Index of the currently active/primary lane.</field>
+      <field type="uint8_t" name="lane_count">Number of lanes reported in the array fields below.</field>
+      <field type="int32_t[3]" name="lat" units="degE7">Per-lane latitude.</field>
+      <field type="int32_t[3]" name="lng" units="degE7">Per-lane longitude.</field>
+      <field type="float[3]" name="alt" units="m">Per-lane altitude above mean sea level.</field>
+      <field type="float[3]" name="roll" units="rad">Per-lane roll angle.</field>
+      <field type="float[3]" name="pitch" units="rad">Per-lane pitch angle.</field>
+      <field type="float[3]" name="yaw" units="rad">Per-lane yaw angle.</field>
+      <field type="float[3]" name="pos_variance_ne" units="m*m">Per-lane NE position variance.</field>
+      <field type="uint8_t[3]" name="is_healthy">Per-lane eligibility.</field>
+      <field type="uint8_t[3]" name="posxy_source">Per-lane horizontal position source.</field>
+    </message>
     <message id="11060" name="NAMED_VALUE_STRING">
       <description>Send a key-value pair as string. The use of this message is discouraged for normal packets, but a quite efficient way for testing new messages and getting experimental debug output.</description>
       <field type="uint32_t" name="time_boot_ms" units="ms">Timestamp (time since system boot).</field>
