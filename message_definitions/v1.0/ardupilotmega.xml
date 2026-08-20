@@ -2143,7 +2143,7 @@
       <field type="uint8_t" name="lane_count">Number of lanes reported in the array fields below.</field>
       <field type="int32_t[3]" name="lat" units="degE7">Per-lane latitude.</field>
       <field type="int32_t[3]" name="lng" units="degE7">Per-lane longitude.</field>
-      <field type="float[3]" name="alt" units="m">Per-lane altitude above mean sea level.</field>
+      <field type="float[3]" name="alt_m" units="m">Per-lane altitude above mean sea level.</field>
       <field type="float[3]" name="roll" units="rad">Per-lane roll angle.</field>
       <field type="float[3]" name="pitch" units="rad">Per-lane pitch angle.</field>
       <field type="float[3]" name="yaw" units="rad">Per-lane yaw angle.</field>
