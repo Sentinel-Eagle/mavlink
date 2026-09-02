@@ -2133,6 +2133,8 @@
     </message>
     <message id="12004" name="EAGLE_SET_EXTNAV_POSITION">
       <description>Clicked on map.</description>
+      <field type="uint8_t" name="target_system">System ID.</field>
+      <field type="uint8_t" name="target_component">Component ID.</field>
       <field type="int32_t" name="lat" units="degE7">Latitude.</field>
       <field type="int32_t" name="lng" units="degE7">Longitude.</field>
       <field type="uint8_t" name="source" enum="EAGLE_EXTNAV_SET_POSITION_SOURCE">Who requested this update.</field>
